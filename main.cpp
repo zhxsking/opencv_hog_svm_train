@@ -11,22 +11,24 @@
 using namespace std;
 using namespace cv;
 
-cv::Size winSize(64, 128);
+cv::Size winSize(64, 64);
 cv::Size blockSize(16, 16);
 cv::Size blockStride(8, 8);
 cv::Size cellSize(8, 8);
-int hogSize = 3780;//64*64为1764，64*128为3780
+int hogSize = 1764;//64*64为1764，64*128为3780，64*224为6804
 
 void train_hog_svm()
 {
-	//string positivePath = "D:\\pic\\muti\\hog_svm\\pedestrain\\pos\\";
-	//string negativePath = "D:\\pic\\muti\\hog_svm\\pedestrain\\neg\\";
-	string positivePath = "D:\\pic\\muti\\hog_svm\\wheat\\pos\\";
-	string negativePath = "D:\\pic\\muti\\hog_svm\\wheat\\neg\\";
+	string positivePath = "D:\\pic\\muti\\hog_svm\\lotus\\pos\\";
+	string negativePath = "D:\\pic\\muti\\hog_svm\\lotus\\neg\\";
+	//string positivePath = "D:\\pic\\muti\\hog_svm\\wheat\\pos\\";
+	//string negativePath = "D:\\pic\\muti\\hog_svm\\wheat\\neg\\";
+	//string positivePath = "D:\\pic\\muti\\hog_svm\\wheat\\64-224\\pos\\";
+	//string negativePath = "D:\\pic\\muti\\hog_svm\\wheat\\64-224\\neg\\";
 	string suffix = ".jpg";// 图片后缀 
 
-	int positiveSampleCount = 50;
-	int negativeSampleCount = 150;
+	int positiveSampleCount = 500;
+	int negativeSampleCount = 100;
 	int totalSampleCount = positiveSampleCount + negativeSampleCount;
 
 	std::cout << "/******************************/" << std::endl;
@@ -175,11 +177,11 @@ void detect_hog_svm()
 	std::cout << "识别中..." << std::endl;
 
 	Mat src;
-	src = imread("D:\\pic\\wheat_pic\\wheat_stand.jpg");
-	//src = imread("D:\\pic\\muti\\hog_svm\\wheat\\pos\\29.jpg");
+	//src = imread("D:\\pic\\wheat_pic\\wheat_stand_mid.jpg");
+	src = imread("D:\\pic\\muti\\test_lotus\\lotus-614421__340.jpg");
 	//src = imread("D:\\pic\\muti\\wheat\\wheat_132.jpg");
 	//src = imread("D:\\pic\\wheat_pic\\wheat1_ps_low.jpg");
-	//src = imread("D:\\pic\\wheat_pic\\1\\wheat1_5_4.jpg");
+	//src = imread("C:\\Users\\Administrator\\Desktop\\timg.jpg");
 
 	vector<Rect> found, found_filtered;//矩形框数组
 	hog.detectMultiScale(src, found, 0, Size(8, 8), Size(32, 32), 1.5, 2);//对图像进行多尺度检测
@@ -205,9 +207,9 @@ void detect_hog_svm()
 		r.width = cvRound(r.width*0.8);
 		r.y += cvRound(r.height*0.07);
 		r.height = cvRound(r.height*0.8);
-		rectangle(src, r.tl(), r.br(), Scalar(0, 0, 255), 2);
+		rectangle(src, r.tl(), r.br(), Scalar(0, 255, 255), 2);
 	}
-	namedWindow("检测", 1);
+	namedWindow("检测", WINDOW_NORMAL);
 	imshow("检测", src);
 	//imwrite("ImgProcessed.jpg",src);
 	waitKey();//注意：imshow之后一定要加waitKey，否则无法显示图像
